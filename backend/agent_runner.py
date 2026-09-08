@@ -36,8 +36,8 @@ async def run_agent(agent: Agent, workspace: Path, broadcast_fn, groq_client, se
 
     for iteration in range(1, settings.max_iterations + 1):
         if agent.stopped:
-            await emit(EventType.SYS, text="Stopped by user")
             agent.status = AgentStatus.STOPPED
+            await emit(EventType.SYS, text="Stopped by user")
             return
 
         await emit(EventType.ITERATION, n=iteration)
@@ -51,15 +51,15 @@ async def run_agent(agent: Agent, workspace: Path, broadcast_fn, groq_client, se
                 max_tokens=2048,
             )
         except APIStatusError as e:
+            agent.status = AgentStatus.ERROR
             if e.status_code == 429:
                 await emit(EventType.ERROR, msg="Rate limited — retry in a moment")
             else:
                 await emit(EventType.ERROR, msg=str(e))
-            agent.status = AgentStatus.ERROR
             return
         except Exception as e:
-            await emit(EventType.ERROR, msg=str(e))
             agent.status = AgentStatus.ERROR
+            await emit(EventType.ERROR, msg=str(e))
             return
 
         msg = response.choices[0].message
