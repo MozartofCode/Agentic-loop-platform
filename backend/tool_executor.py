@@ -157,8 +157,8 @@ async def execute_tool(name: str, args: dict, workspace: Path) -> str:
         try:
             proc = await asyncio.create_subprocess_exec(
                 "python3",
-                str(tmp_path),
-                cwd=str(workspace),
+                str(tmp_path.resolve()),
+                cwd=str(workspace.resolve()),
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
             )

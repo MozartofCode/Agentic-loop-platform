@@ -8,7 +8,10 @@ agent — thoughts, tool calls, outputs, iteration counts — live over a WebSoc
 Agents can work in a scratch workspace, or you can **connect a GitHub repo** and have the agent
 run against a real, cloned copy of it.
 
-**LLM provider:** [Groq](https://console.groq.com) (free tier). Model: `llama-3.3-70b-versatile`.
+**LLM provider:** [Groq](https://console.groq.com) (free tier). Model: `openai/gpt-oss-120b`
+(a tool-calling-capable model currently on Groq's free tier — swap `GROQ_MODEL` in `.env` if
+Groq's lineup changes; check available models at any time with
+`curl https://api.groq.com/openai/v1/models -H "Authorization: Bearer $GROQ_API_KEY"`).
 No paid services, no database — state is in-memory for this MVP.
 
 ## Architecture

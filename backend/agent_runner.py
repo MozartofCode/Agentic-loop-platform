@@ -65,8 +65,9 @@ async def run_agent(agent: Agent, workspace: Path, broadcast_fn, groq_client, se
         msg = response.choices[0].message
         messages.append(msg.model_dump(exclude_none=True))
 
-        if msg.content:
-            await emit(EventType.THOUGHT, text=msg.content)
+        thought_text = msg.content or getattr(msg, "reasoning", None)
+        if thought_text:
+            await emit(EventType.THOUGHT, text=thought_text)
 
         if not msg.tool_calls or response.choices[0].finish_reason == "stop":
             agent.status = AgentStatus.DONE
